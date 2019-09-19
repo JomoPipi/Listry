@@ -1,9 +1,9 @@
-const fs = require('fs')
+// const fs = require('fs')
 const D = x => document.getElementById(x)
 const f = x => (console.log(x),x)
 //try{
-const data = JSON.parse(fs.readFileSync('data.json', 'utf8'))
-const path = JSON.parse(fs.readFileSync('path.json', 'utf8'))
+const data = {items:[],title:'List'}//JSON.parse(fs.readFileSync('data.json', 'utf8'))
+const path = []//JSON.parse(fs.readFileSync('path.json', 'utf8'))
 // } catch (e) {
 //     fs.appendFileSync('data.json')
 //     fs.appendFileSync('path.json')
@@ -19,7 +19,7 @@ D('prev-entry').onclick = _ => {
     list = data
     path.forEach(x => list = list.items[x])
     loadList()
-    fs.writeFileSync('path.json', JSON.stringify(path))
+    // fs.writeFileSync('path.json', JSON.stringify(path))
 }
 D('delete-entry').onclick = deleteEntry = _ => { 
     if (editMode) leaveEditMode()
@@ -73,7 +73,7 @@ function showItem(item,x) {
         path.push(i)
         list = list.items[i]
         loadList()
-        fs.writeFileSync('path.json', JSON.stringify(path))
+        // fs.writeFileSync('path.json', JSON.stringify(path))
     }
     listContainer.appendChild(html)
 }
@@ -111,5 +111,5 @@ function Item(text) {
 }
 
 function rewrite() {
-    fs.writeFileSync('data.json', JSON.stringify(data))
+    // fs.writeFileSync('data.json', JSON.stringify(data))
 }
