@@ -12,33 +12,35 @@
 
 // listen for auth status changes
 auth.onAuthStateChanged(user => {
-    const [login,signup] = ['login','signup'].map(x => D(x + '-page-button').style)
-    login.display = signup.display = user ? 'none' : 'block'
-    D('logout-form').style.display = user ? 'block' : 'none'
+    // const [login,signup] = ['login','signup'].map(x => D(x + '-page-button').style)
+    // login.display = signup.display = user ? 'none' : 'block'
+    // D('logout-form').style.display = user ? 'block' : 'none'
 
     if (user) { 
-        D('email-display').innerHTML = user.email
-        User.loggedIn = true
-        User.save = function() {
-            User.store()
-            User.loggedIn && db.collection('users').doc(user.uid).set({
-                completions: User.completions,
-                submissions: User.submissions
-            })
-        }
+        console.log('logged in!')
+        gotoPage(LIST)
         db.collection('users').doc(user.uid).get().then(async doc => {
             const d = await doc.data()
-            if (d.submissions) for (const k in d.submissions)
-                if (!User.submissions[k])
-                    User.submissions[k] = d.submissions[k]
-            if (d.completions) for (const k in d.completions)
-                if (d.completions[k])
-                    User.completions[k] = true
+            User.save = async _ => {
+                db.collection('users').doc(user.uid).set({
+                    data: User.data,
+                    path: User.path
+                })
+            }
+            if (d && d.data) {
+                User.data = d.data
+                User.path = d.path
+            } else {
+                User.data = Item('List')
+                User.path = []
+            }
         }).then(_ => {
-            if (currentPage === LOGIN || currentPage === SIGNUP) goHome()
-            colorAllButtons()
+            // if (currentPage === SIGNUP) goHome()
+            populateList()
             User.save()
-        })
+        }).catch(e => console.log(e))
+    } else {
+        gotoPage(LOGIN)
     }
 })
 
@@ -62,10 +64,10 @@ D('signup-form').onsubmit = function(e) {
 
     auth.createUserWithEmailAndPassword(email, pw).then(cred => {
         return db.collection('users').doc(cred.user.uid).set({
-            completions: User.completions,
-            submissions: User.submissions
+            data: Item('List'),
+            path: []
         })
-    }).then(_ => this.reset()).catch(e => message(e))
+    }).then(_ => this.reset(), populateList()).catch(e => message(e))
 }
 
 
@@ -79,10 +81,11 @@ D('signup-form').onsubmit = function(e) {
 D('logout').onclick = function(e) {
     e.preventDefault()
     User.loggedIn = false
-    User.reset()
-    colorAllButtons()
-    goHome()
-    auth.signOut()
+    User.save().then(_=>{
+        User.reset()
+        gotoPage(LOGIN)
+        auth.signOut()
+    })
 }
 
 
@@ -102,5 +105,5 @@ D('login-form').onsubmit = function(e) {
     const [email,pw] = ['email','pw'].map(x => this['login-'+x].value)
 
     auth.signInWithEmailAndPassword(email,pw).then(cred => 
-        this.reset() ).catch(e => message(e.message))
+        this.reset(), gotoPage(LIST) ).catch(e => message(e.message),  gotoPage(LOGIN))
 }
