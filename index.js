@@ -70,7 +70,7 @@ function showItem(item,x) {
     (html.onmouseout = _ => html.className = 'table-' + (x % 2 === 0 ? 'primary' : 'secondary'))()
     html.style.borderRadius = '2px'
     html.style.width = '100%'
-    html.style.font = '30px Arial black'
+    html.style.font = '80px Arial black'
     html.innerHTML = (x+1) + '. ' + item.title
     html.onclick = _ => { 
         const i = list.items.indexOf(item)
