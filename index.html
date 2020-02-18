@@ -3,6 +3,87 @@
     <head>
         <title>Listry</title>
         <link rel="stylesheet" href="https://bootswatch.com/4/journal/bootstrap.min.css">
+        <style>
+            * {
+                font-family: roboto, Verdana, Geneva, Tahoma, sans-serif;
+            }
+            #entry {
+                height: 50px;
+                font-size: 1.5em;
+            }
+            #list-page {
+                margin-left: 1vw;
+                margin-right: 1vw;
+                height: 80vh;
+            }
+            #logout {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+
+
+
+
+
+
+
+
+
+            #top-section {
+                height: 20vh;
+            }
+            #list-container-container {
+                height: 60vh;
+                overflow-Y: scroll;
+            }
+            #toolbar {
+                padding-left: 10px;
+                position: fixed;
+                color:white;
+                font-size:1em;
+                bottom:0;
+                width: 100vw;
+                height: 17vh;
+                background-color: #332f35;
+            }
+            
+
+
+
+
+
+
+
+
+            
+            input[type=radio] {
+                position: absolute;
+                visibility: hidden;
+                display: none;
+            }
+            label {
+                display: inline-block;
+                cursor: pointer;
+                font-weight: bold;
+                padding: 5px 20px;
+            }
+
+            input[type=radio]:checked + label{
+                color: lighten(#332f35,60%);
+                background: #49434d;
+            }
+
+            .radio-group {
+                display: inline-block;
+                margin: 20px;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+
+            @import url('https://fonts.googleapis.com/css?family=Roboto');
+        </style>
     </head>
     <body>
         <center>
@@ -56,8 +137,8 @@
         </center>
 
         <div class="list-container" id="list-page" style="display: none;">
-            <center>
-                <h1 id="main-text" style="font-size:80px;"></h1>
+            <div style="text-align: center;" id="top-section">
+                <h1 id="main-text" style="font-size:50px;"></h1>
                 <button id="prev-entry" class="btn btn-primary btn-lg" style="display:none"> 
                     &#x02190; 
                 </button>
@@ -66,7 +147,7 @@
                 <button "display:inherit;" id="delete-entry" class="btn btn-danger btn-lg"> DELETE </button>
                 
                 <button style="float:right;margin:1%;" id="logout" class="btn btn-secondary btn-lg"> LOG-OUT </button>
-            </center>
+            </div>
             <div id="list-container-container" style="margin:1%;">
                 <div id="list-container"></div>
                 <input class="form-control" id="entry" placeholder="&#x1F4DD;">
@@ -74,6 +155,15 @@
                 <button type="button" id="add" class="btn btn-primary" style="display:none">
                     Add Entry
                 </button>
+            </div>
+        </div>
+        <div id="toolbar">
+            rearrange mode: <br>
+            <div class="radio-group">
+                <input type="radio" id="swap" name="rearrange-mode" checked="1">
+                <label for="swap">swap</label>
+                <input type="radio" id="insert" name="rearrange-mode">
+                <label for="insert">insert</label><br>
             </div>
         </div>
     </body>
