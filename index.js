@@ -59,10 +59,18 @@ function loadList() {
 }
 
 function createItem(entry) {
-    const item = Item(entry)
-    showItem(item,list.items.length)
-    list.items.push(item)
-    User.save()
+    if (typeof entry === 'object') {
+        // reinsertion is taking place
+        const item = entry
+        showItem(item,list.items.length)
+        list.items.push(item)
+        User.save()
+    } else {
+        const item = Item(entry)
+        showItem(item,list.items.length)
+        list.items.push(item)
+        User.save()
+    }
 }
 function showItem(item,id) {
     const listContainer = D('list-container')
@@ -94,12 +102,13 @@ function showItem(item,id) {
             ) 
             || arr[arr.length-1]).id
 
-        const children = [...listContainer.children]
+        // const children = [...listContainer.children]
         listContainer.innerHTML = ''
+        const listItems = list.items.slice()
         list.items.length = 0
-        const elem = children.splice(id, 1)[0]
-        children.splice(indexDraggedInto, 0, elem)
-        children.forEach(c => createItem(c.dataset.title))
+        const elem = listItems.splice(id, 1)[0]
+        listItems.splice(indexDraggedInto, 0, elem)
+        listItems.forEach(createItem)
     }
     itemDiv.draggable = true
     itemDiv.onclick = _ => { 
